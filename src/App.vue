@@ -1,30 +1,35 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+ <div>APP组件</div>
+ <ul>
+   <li v-for="item in $store.getters.boys" :key="item.id">{{item.name}}</li>
+ </ul>
+ <!-- 使用模块A的username -->
+ <p>A的username --- {{$store.state.a.username}}</p>
+ <p>A的changeName --- {{$store.getters.changeName}}</p>
+ <hr>
+ <p>B的username --- {{$store.state.b.username}}</p>
+ <p>B的changeName --- {{$store.getters['b/changeName']}}</p>
+ <button @click="$store.commit('b/update')">修改username</button>
+ <button @click="$store.dispatch('b/update')">异步修改username</button>
 </template>
-
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+<script>
+// import { useStore } from 'vuex';
+export default {
+  name:'App',
+  setup() {
+    // const store = useStore()
+    // const mutationsFn = () => {
+    //   // 2.3 提交B模块的修改
+    //   store.commit('b/updateName')
+    // }
+    // const actionFn = () => {
+    //   // 2.4 调用B模块的actions
+    //   store.dispatch('b/updateName')
+    // }
+    // return {
+    //   mutationsFn,
+    //   actionFn
+    // }
   }
 }
-</style>
+</script>
