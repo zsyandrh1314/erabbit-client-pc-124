@@ -1,108 +1,28 @@
 import { createStore } from 'vuex'
+// 使用vuex-persistedstate插件来进行持久化
+import createPersistedstate from 'vuex-persistedstate'
 
-const moduleA = {
-  // 子模块state建议写成函数
-  state: () => {
-    return {
-      username: '模块A'
-    }
-  },
-  getters: {
-    changeName(state) {
-      return state.username + 'AAAAAA'
-    }
-  }
-}
+// 三个模块
+import user from './modules/user'
+import cart from './modules/cart'
+import category from './modules/category'
 
-const moduleB = {
-  // 带命名空间的模块
-  namespaced: true,
-  // 子模块state建议写成函数
-  state: () => {
-    return {
-      username: '模块B'
-    }
-  },
-  getters: {
-    changeName(state) {
-      return state.username + 'BBBBBB'
-    }
-  },
-  mutations: {
-    // 修改名字的mutation
-    update(state) {
-      state.username = 'BBBB' + state.username
-    }
-  },
-  actions: {
-    update({ commit }) {
-      // 假设请求
-      setTimeout(() => {
-        commit('update')
-      }, 2000)
-    }
-  }
-}
-
-// 创建vuex仓库并导出
 export default createStore({
-  state: {
-    // 数据
-    person: [
-      { id: 1, name: 'tom', gender: '男' },
-      { id: 2, name: 'lucy', gender: '女' },
-      { id: 3, name: 'jack', gender: '男' }
-    ]
-  },
-  mutations: {
-    // 改数据函数
-  },
-  actions: {
-    // 请求数据函数
-  },
   modules: {
-    // 分模块
-    a: moduleA,
-    b: moduleB
+    user,
+    cart,
+    category
   },
-  getters: {
-    // vuex的计算属性
-    boys: (state) => {
-      return state.person.filter(p => p.gender === '男')
-    }
-  }
+  // 配置插件
+  plugins: [
+    // 默认存储在localStorage上
+    createPersistedstate({
+      // key是本地存储名字
+      key: 'erabbit-client-pc-124-store',
+      // paths是存储state中的那些数据，如果是模块下具体的数据需要加上模块名称，如user.token
+      // 指定需要存储的模块
+      paths: ['user','cart']
+      // 修改state后触发才可以看到本地存储数据的的变化
+    })
+  ]
 })
-
-
-// vue2.0 创建仓库 new Vuex.Store({})
-// vue3.0 创建仓库 createStore({})
-// export default createStore({
-//   // 存数据
-//   state: {
-//     username:'zsy'  
-//   },
-//   // 写vuex的计算属性
-//   getters: {
-//     newName(state) {
-//       return state.username + '!!!'
-//     }
-//   },
-//   // 修改方法,改数据函数 
-//   mutations: {
-//     updateName(state) {
-//       state.username = 'rh'
-//     }
-//   },
-//   // 请求数据函数
-//   actions: {
-//     updateName(zzz) {
-//       // 发请求
-//       setTimeout(() => {
-//         zzz.commit('updateName')
-//       },1000)
-//     }
-//   },
-//   // 分模块
-//   modules: {
-//   }
-// })
