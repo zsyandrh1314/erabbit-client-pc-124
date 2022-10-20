@@ -8,9 +8,9 @@ export default {
         id: '',
         avatar: '',
         nickname: '',
-        account:'',
+        account:'',// 账户
         mobile: '',
-        token: ''
+        token: ''// 判断用户登录状态
       }
     }
   },

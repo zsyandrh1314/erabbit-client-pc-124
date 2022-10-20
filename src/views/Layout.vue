@@ -1,23 +1,33 @@
 <template>
 <!-- 顶部通栏 -->
-<nav>顶部通栏</nav>
+<AppTopNav />
 <!-- 头部通栏 -->
-<header>头部通栏</header>
+<AppHeader />
 <!-- 内容容器 -->
 <div class="main">
   <!-- 二级路由 -->
   <RouterView/>
 </div>
 <!-- 底部通栏 -->
-<footer>底部通栏</footer>
+<AppFooter />
 </template>
 
 <script>
+import AppTopNav from '@/components/app-topnav.vue'
+import AppHeader from '@/components/app-header.vue'
+import AppFooter from '@/components/app-footer.vue'
   export default {
-    name:'Layout'
+    name:'Layout',
+    components: {
+      AppTopNav,
+      AppHeader,
+      AppFooter
+    }
   }
 </script>
 
 <style lang="less" scoped>
-
+.app-body {
+  min-height: 600px;
+}
 </style>
