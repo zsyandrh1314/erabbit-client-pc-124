@@ -10,23 +10,44 @@
     </div>
   </div>
   <!-- 新鲜好物 -->
+  <HomeNew />
   <!-- 人气推荐 -->
+  <HomeHot />
+  <!-- Vue动画 -->
 
 </template>
 <script>
 import HomeCategory from './components/home-category'
 import HomeBanner from './components/home-banner'
+import HomeNew from './components/home-new'
+import HomeHot from './components/home-hot'
 export default {
   name: 'HomePage',
   components: {
     HomeCategory,
-    HomeBanner
+    HomeBanner,
+    HomeNew,
+    HomeHot
   }
 }
 </script>
 <style lang="less" scoped>
-.container {
- .hoverShadow();
- color:@xtxColor;
-}
+// .container {
+//  .hoverShadow();
+//  color:@xtxColor;
+// }
+// 使用Transition组件实现动画，一个元素或者组件的(显示|隐藏,创建|移除)
+
+// 进入前 v-enter (v-enter-from)VUE3
+// 进入中 v-enter-active
+// 进入后 v-enter-to
+
+// 离开前 v-leave (v-leave-from)VUE3
+// 离开中 v-leave-active
+// 离开后 v-leave-to
+
+// 需求：一个盒子在显示隐藏的时候做淡入淡出动画
+// 1.准备盒子
+// 2.控制显示隐藏
+// 3.加入动画
 </style>

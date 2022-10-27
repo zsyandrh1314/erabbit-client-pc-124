@@ -5,6 +5,7 @@
 
 import XtxSkeleton from './xtx-skeleton.vue'
 import XtxCarousel from './xtx-carousel.vue'
+import XtxMore from './xtx-more.vue'
 
 export default {
   install(app) {
@@ -13,5 +14,7 @@ export default {
     app.component(XtxSkeleton.name, XtxSkeleton)
     // 全局注册轮播图
     app.component(XtxCarousel.name,XtxCarousel)
+    // 全局注册查看更多组件
+    app.component(XtxMore.name, XtxMore)
   }
 }
