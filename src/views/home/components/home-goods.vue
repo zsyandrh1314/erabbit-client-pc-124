@@ -3,7 +3,7 @@
 <!-- 单个商品组件 -->
   <div class="goods-item">
    <RouterLink to="`/product/${goods.id}`" class="image">
-     <img :src="goods.picture" alt="" />
+     <img v-lazy="goods.picture" alt="" />
    </RouterLink>
    <p class="name ellipsis-2">{{goods.name}}</p>
    <p class="desc ellipsis">{{goods.tag}}</p>
