@@ -2,7 +2,7 @@
 <!-- 提取头部导航为一个组件 -->
   <ul class="app-header-nav">
     <li class="home"><RouterLink to="/">首页</RouterLink></li>
-    <li v-for="item in list" :key="item.id" @mouseenter="show(item)" @mouseleave="hide(item)">
+    <li @mousemove="show(item)" v-for="item in list" :key="item.id" @mouseenter="show(item)" @mouseleave="hide(item)">
       <!-- 一级分类 -->
       <RouterLink :to="`/category/${item.id}`" @click="hide(item)">{{item.name}}</RouterLink>
       <!-- 弹层 子集分类布局-->

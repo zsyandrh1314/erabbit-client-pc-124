@@ -4,7 +4,7 @@ import { h } from 'vue'
   export default {
     name: 'XtxBread',
     // render 是vue提供的一个渲染函数，优先级大于el,template等选项，用来提供组件结构。
-    render() {
+    render () {
       // 用法
       // 1.template 标签去除，单文件组件
       // 2.返回值就是组件内容
@@ -16,7 +16,7 @@ import { h } from 'vue'
       // 3. 去除xtx-bread-item组件的i标签，因该由render函数来组织
       // 4. 遍历插槽中的item，得到一个动态创建的节点，最后一个item不加i标签
       // 5. 把动态创建的节点渲染再xtx-bread标签中
-    const items = this.$slots.default()
+    const items = this.$slots.default() // 获得默认的所有插槽内容
     const dymanicItems = []
     items.forEach((item, i) => {
       dymanicItems.push(item)
@@ -24,16 +24,17 @@ import { h } from 'vue'
         dymanicItems.push(h('i', { class: 'iconfont icon-angle-right' }))
       }
     })
+    // h函数创建标签
     return h('div', { class: 'xtx-bread' }, dymanicItems)
   }
 }
 </script>
-<!-- 去掉 scoped 属性，目的：让样式作用到xtx-bread-item组件 -->
+
 <style lang="less">
+// 去除 scoped 属性，目的：然样式作用到xtx-bread-item组件
 .xtx-bread{
   display: flex;
-  // padding: 25px 10px;
-  padding: 2px 10px;
+  padding: 25px 10px;
   // ul li:last-child {}
   // 先找到父元素，找到所有的子元素，找到最后一个，判断是不是LI，是就是选中，不是就是无效选择器
   // ul li:last-of-type {}
