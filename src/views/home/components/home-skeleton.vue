@@ -33,7 +33,7 @@
     .xtx-skeleton ~ .xtx-skeleton{
       display: block;
       margin: 16px auto 0;
-      padding: 10px 0;
+      // padding: 10px 0;
     }
   }
 }
