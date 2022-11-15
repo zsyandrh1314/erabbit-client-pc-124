@@ -1,4 +1,5 @@
 <template>
+<!-- 筛选区展示 -->
   <div class="sub-filter" v-if="filterData && !filterLoading">
     <div class="item">
       <div class="head">品牌：</div>
@@ -43,7 +44,7 @@ export default {
           // 1. 品牌
           data.result.selectedBrand = null
           data.result.brands.unshift({ id: null, name: '全部' })
-          // 2. 属性
+          // 2. 属性  saleProperties 销售属性集合
           data.result.saleProperties.forEach(item => {
             item.selectedProp = null
             item.properties.unshift({ id: null, name: '全部' })
