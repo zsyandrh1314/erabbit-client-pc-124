@@ -2,6 +2,7 @@
 <!-- 排序组件 -->
    <div class='sub-sort'>
     <div class="sort">
+      <!-- active 激活排序 -->
       <a :class="{active:sortParams.sortField===null}" @click="changeSort(null)" href="javascript:;">默认排序</a>
       <a :class="{active:sortParams.sortField==='publishTime'}" @click="changeSort('publishTime')" href="javascript:;">最新商品</a>
       <a :class="{active:sortParams.sortField==='orderNum'}" @click="changeSort('orderNum')" href="javascript:;">最高人气</a>
@@ -24,20 +25,25 @@ import { reactive } from 'vue'
   export default {
     name: 'SubSort',
     setup() {
+      // 实现交互 (实现交换的数据和后台保持一致)
       // 1. 根据后台需要的参数定义数据对象
       // 2. 根据数据对象，绑定组件（复选框，排序按钮）
       // 3. 在操作排序组件的时候，需要反馈给数据对象
       // sortField====>publishTime,orderNum,price,evaluateNum
       // sortMethod====>asc为正序 desc为倒序
+
+      // 1.明确交互数据
       const sortParams = reactive({
-        inventory: false, //有货商品
+        inventory: false, //有货商品(是否有库存)
         onlyDiscount: false, //特惠商品
-        sortField: null, // 排序字段 取值范围[publishTime,orderNum,price,evaluateNum]
-        sortMethod: null // 排序规则，asc为正序，desc为倒序，默认为desc	
+        sortField: null, // 排序字段 ,取值范围[publishTime,orderNum,price,evaluateNum]
+        sortMethod: null // 排序规则 ,asc为正序，desc为倒序，默认为desc	
       })
 
+      // 3.需要绑定按钮的点击事件，修改排序字段和排序方式
       //改变排序
       const changeSort = (sortField) => {
+        // 特殊情况价格按钮和普通按钮进行判断
         if (sortField === 'price') {
           sortParams.sortField = sortField
           if (sortParams.sortMethod === null) {
@@ -48,12 +54,13 @@ import { reactive } from 'vue'
             sortParams.sortMethod = sortParams.sortMethod === 'desc'?'asc':'desc'
           }
         } else {
-          // 如果排序未改变停止逻辑  
+          // 如果排序未改变已经选中，停止逻辑运行 
           if (sortParams.sortField === sortField) return 
           sortParams.sortField = sortField
           sortParams.sortMethod = null
         }
       }
+      // 2.提供给模板使用
       return {sortParams, changeSort}
     }
   }

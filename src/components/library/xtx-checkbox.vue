@@ -1,7 +1,9 @@
 <template>
+<!-- 复选框组件 -->
   <div class="xtx-checkbox" @click="changeChecked()">
     <i v-if="checked" class="iconfont icon-checked"></i>
     <i v-else class="iconfont icon-unchecked"></i>
+    <!-- 默认插槽 -->
     <span v-if="$slots.default"><slot /></span>
   </div>
 </template>
