@@ -79,7 +79,7 @@ export default {
       filterData.value.selectedBrand = brandId
       emit('filter-change', getFilterParams())
     }
-    // 2. 记录呢选择的销售属性
+    // 2. 记录当前选择的销售属性
     const changeProp = (item, propId) => {
       if (item.selectedProp === propId) return
       item.selectedProp = propId

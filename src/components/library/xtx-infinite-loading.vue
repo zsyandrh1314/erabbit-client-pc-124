@@ -1,5 +1,5 @@
 <template>
-<!-- 结果区-数据加载 -->
+<!-- 结果区 数据加载 -->
   <div class="xtx-infinite-loading" ref="target">
     <div class="loading" v-if="loading">
       <span class="img"></span>
@@ -15,39 +15,40 @@
 <script>
 import { ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
-  export default {
-    name: 'XtxInfinteLoading',
-    props: {
-      loading: {
-        type: Boolean,
-        default: false
-      },
-      finished: {
-        type: Boolean,
-        default: false
-      }
+export default {
+  name: 'XtxInfiniteLoading',
+  props: {
+    loading: {
+      type: Boolean,
+      default: false
     },
-    setup(props, {emit}) {
-      const target = ref(null)
-      useIntersectionObserver(
-        target,
-        ([{isIntersecting}],dom) => {
-          if(isIntersecting) {
-            if (props.loading === false && props.finished === false) {
-              emit('infinite')
-            }
-          }
-        },
-        {
-          threshold:0
-        }
-      )
-      return {target}
+    finished: {
+      type: Boolean,
+      default: false
     }
+  },
+  setup (props, { emit }) {
+    const target = ref(null)
+    // 监听target是否进入可视区
+    useIntersectionObserver(
+      target,
+      ([{ isIntersecting }]) => {
+        if (isIntersecting) {
+          console.log('进入可视区了')
+          // 触发加载事件条件：请求加载完成，数据加载完毕
+          if (!props.loading && !props.finished) {
+            emit('infinite')
+          }
+        }
+      }, {
+        threshold: 0
+      })
+    return { target }
   }
+}
 </script>
 
-<style lang="less" scoped>
+<style scoped lang="less">
 .xtx-infinite-loading {
   .loading {
     display: flex;
