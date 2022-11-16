@@ -11,6 +11,8 @@ const Home = () => import('@/views/home')
 const TopCategory = () => import('@/views/category/index')
 // 二级分类
 const SubCategory = () => import('@/views/category/sub')
+// 商品详情
+const Goods = () => import('@/views/goods/index')
 
 // 路由规则
 const routes = [
@@ -21,8 +23,9 @@ const routes = [
     component: Layout, 
     children:[
       { path: '/', component: Home },
-      { path:'/category/:id',component: TopCategory },
-      { path: '/category/sub/:id', component: SubCategory }
+      { path:'/category/:id', component: TopCategory },
+      { path: '/category/sub/:id', component: SubCategory },
+      { path: '/product/:id', component: Goods}
     ] 
   }
 ]
