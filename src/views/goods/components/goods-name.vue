@@ -13,7 +13,9 @@
     </dl>
     <dl>
       <dt>配送</dt>
-      <dd>至 </dd>
+      <dd>至 
+        <XtxCity />
+      </dd>
     </dl>
     <dl>
       <dt>服务</dt>
@@ -28,8 +30,12 @@
 </template>
 
 <script>
+import { XtxCity } from '@/components/library/xtx-city'
   export default {
     name: 'GoodsName',
+    components: {
+      XtxCity
+    },
     props: {
       goods: {
       type: Object,
