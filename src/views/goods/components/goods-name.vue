@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { XtxCity } from '@/components/library/xtx-city'
+import XtxCity  from '@/components/library/xtx-city'
   export default {
     name: 'GoodsName',
     components: {
