@@ -4,6 +4,7 @@
     <div class="middle">
       <img :src="images[currIndex]" alt="">
     </div>
+    <!-- 五张小图 -->
     <ul class="small">
       <li v-for="(img,i) in images" :key="img" :class="{active:i===currIndex}">
         <img @mouseenter="currIndex=i" :src="img" alt="">
@@ -22,7 +23,7 @@ export default {
     }
   },
   setup (props) {
-    // 当前预览图的索引
+    // 记录当前预览图的索引
     const currIndex = ref(0)
     return { currIndex }
   }

@@ -2,22 +2,27 @@
 <!-- 商品详情 -->
   <div class="xtx-goods-page" v-if="goods">
     <div class="container">
+
        <!-- 面包屑 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
-        <XtxBreadItem :to="'/category/'+goods.categories[0].id">{{goods.categories[0].name}}</XtxBreadItem>
-        <XtxBreadItem :to="'/category/sub/'+goods.categories[1].id">{{goods.categories[1].name}}</XtxBreadItem>
+        <XtxBreadItem :to="`/category/${goods.categories[0].id}`">{{goods.categories[0].name}}</XtxBreadItem>
+        <XtxBreadItem :to="`/category/sub/${goods.categories[1].id}`">{{goods.categories[1].name}}</XtxBreadItem>
         <XtxBreadItem>{{goods.name}}</XtxBreadItem>
       </XtxBread>
+
       <!-- 商品信息 -->
       <div class="goods-info">
         <div class="media">
+          <!-- goods.mainPictures获取图片 -->
           <GoodsImage :images="goods.mainPictures" />
         </div>
         <div class="spec"></div>
       </div>
+
       <!-- 商品推荐 -->
       <GoodsRelevant />
+
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
@@ -28,7 +33,6 @@
         </div>
         <!-- 24热榜+专题推荐 -->
         <div class="goods-aside"></div>
-
       </div>
     </div>
   </div>
@@ -44,11 +48,12 @@ export default {
   name: 'XtxGoodsPage',
   components: { GoodsRelevant,GoodsImage },
   setup () {
+    // 获取商品详情，进行渲染
     const goods = useGoods()
     return { goods }
   }
 }
-// 获取商品详情
+// 获取商品详情(定义到该函数里，setup进行渲染)
 const useGoods = () => {
   // 出现路由地址商品ID发生变化，但是不会重新初始化组件
   const goods = ref(null)
