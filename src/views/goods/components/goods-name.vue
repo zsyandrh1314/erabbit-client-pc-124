@@ -14,7 +14,7 @@
     <dl>
       <dt>配送</dt>
       <dd>至 
-        <XtxCity />
+        <XtxCity @change="changeCity" :fullLocation="fullLocation" />
       </dd>
     </dl>
     <dl>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import XtxCity  from '@/components/library/xtx-city'
   export default {
     name: 'GoodsName',
@@ -41,6 +42,34 @@ import XtxCity  from '@/components/library/xtx-city'
       type: Object,
       default: () => ({})
       }
+    },
+    // 父组件设置 省市区的code数据，对应的文字数据
+    setup(props) {
+      // 提供给后台的四项数据(没登录给默认值)
+      const provinceCode = ref('110000')
+      const cityCode = ref('119900')
+      const countyCode = ref('110101')
+      const fullLocation = ref('北京市 市辖区 东城区')
+      // 取出用户收货地址中默认的地址给四个数据赋值(已登录)
+      // 有默认地址
+      if(props.goods.userAddresses) {
+        // 为 1 的时候为默认地址
+        const defaultAddresses = props.goods.userAddresses.find(item => item.isDefault === 1) 
+        if (defaultAddresses) {
+          provinceCode.value = defaultAddresses.provinceCode
+          cityCode.value = defaultAddresses.cityCode
+          countyCode.value = defaultAddresses.countyCode
+          fullLocation.value = defaultAddresses.fullLocation
+        }
+      }
+      // 城市选中事件处理函数 (接收子组件的数据)
+      const changeCity = (result) => {
+        provinceCode.value = result.provinceCode
+        cityCode.value = result.cityCode
+        countyCode.value = result.countyCode
+        fullLocation.value = result.fullLocation
+      }
+      return { fullLocation, changeCity }
     }
   }
 </script>
