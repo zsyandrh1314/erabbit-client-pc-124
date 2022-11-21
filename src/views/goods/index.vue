@@ -78,6 +78,7 @@ export default {
     }
     // 选择的数量
     const num = ref(1)
+    
     return { goods, changeSku, num }
   }
 }
