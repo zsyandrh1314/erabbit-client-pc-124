@@ -1,5 +1,5 @@
 <template>
-  <!-- 顶级分类-基础布局搭建
+<!-- 顶级分类-基础布局搭建
    完成顶级分类的，面包屑+轮播图+所属全部子级分类展示 -->
   <div class="top-category">
     <!-- 一级类目 -->
@@ -10,7 +10,7 @@
           <XtxBreadItem :key="topCategory.id">{{topCategory.name}}</XtxBreadItem>
       </XtxBread>
       <!-- 轮播图 -->
-      <XtxCarousel :sliders="sliders" style="height:500px" /> 
+      <XtxCarousel :sliders="sliders" style="height:500px" />
       <!-- 所有二级分类 -->
       <div class="sub-list">
         <h3>全部分类</h3>
@@ -23,14 +23,12 @@
           </li>
         </ul>
       </div>
-      <!-- 各个分类推荐商品 不同分类商品 -->
-      <!-- 分类关联商品 -->
-       <div class="ref-goods" v-for="sub in subList" :key="sub.id">
+      <!-- 各个分类推荐商品 -->
+      <div class="ref-goods" v-for="sub in subList" :key="sub.id">
         <div class="head">
           <h3>- {{sub.name}} -</h3>
-          <!-- <p class="tag">{{sub.desc}}</p> -->
-          <p class="tag">温暖柔软，品质优选</p>
-          <XtxMore :path="`/category/sub/${sub.id}`"/>
+          <p class="tag">温暖柔软，品质之选</p>
+          <XtxMore :path="`/category/sub/${sub.id}`" />
         </div>
         <div class="body">
           <!-- goods 商品集合 api文档里最大数量：5 -->
@@ -40,66 +38,59 @@
     </div>
   </div>
 </template>
-
-<script> 
+<script>
+import { computed, ref, watch } from 'vue'
+import { findBanner } from '@/api/home'
 // 从vuex获取分类数据，进行渲染
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { computed,ref, watch } from 'vue'
-import { findBanner } from '@/api/home'
 import GoodsItem from './components/goods-item'
 import { findTopCategory } from '@/api/category'
-
 export default {
-    name: 'TopCategory',
-    components: {
-      GoodsItem
-    },
-    setup() {
-      // 轮播图
-      const sliders = ref([])
-      findBanner().then(data => {
-        sliders.value = data.result
+  name: 'TopCategory',
+  components: { GoodsItem },
+  setup () {
+    // 轮播图
+    const sliders = ref([])
+    findBanner().then(data => {
+      sliders.value = data.result
+    })
+
+    // 面包屑+所有子分类 ====> vuex
+    const store = useStore()
+    const route = useRoute()
+    const topCategory = computed(() => {
+      let cate = {}
+      // 当前顶级分类 === 根据路由上的ID去vuex中category模块的list中查找
+      const item = store.state.category.list.find(item => {
+        return item.id === route.params.id
       })
+      // 找到数据赋值
+      if (item) cate = item
+      return cate
+    })
 
-       // 面包屑+所有子分类 ===> 都在vuex里
-      const store = useStore()
-      const route = useRoute()
-      const topCategory = computed(() => {
-        // 当前顶级分类 === 根据路由上的ID去vuex中category模块的list中查找
-        let cate = {}
-        const item = store.state.category.list.find(item => {
-          return item.id === route.params.id
-        })
-        if (item) cate = item
-        return cate
-
+    // 获取各个子类目下推荐商品
+    const subList = ref([])
+    const getSubList = () => {
+      findTopCategory(route.params.id).then(data => {
+        subList.value = data.result.children
       })
+    }
+    watch(() => route.params.id, (newVal) => {
+      // newVal && getSubList() 加上一个严谨判断，在顶级类名下才发请求
+      if (newVal && `/category/${newVal}` === route.path) getSubList()
+    }, { immediate: true })
 
-      // 使用watch加载数据
-      // 获取各个子类目推荐商品
-      const subList = ref([])
-      const getSubList = () => {
-        findTopCategory(route.params.id).then(data => {
-          subList.value = data.result.children
-        })
-      }
-      //  immediate: true可让watch初始化的时候主动触发一次
-      watch(() => route.params.id, (newVal) => {
-        // newVal && getSubList() 加上一个严谨判断，在顶级类名下才发请求
-        if(newVal && `/category/${newVal}` === route.path) getSubList()
-      }, { immediate: true })
-
-      return {
-        sliders,
-        topCategory,
-        subList
-      }
-    } 
+    return {
+      sliders,
+      topCategory,
+      subList
+    }
   }
+}
 </script>
-
-<style lang="less" scoped>
+<style scoped lang="less">
 .top-category {
   h3 {
     font-size: 28px;
@@ -115,6 +106,7 @@ export default {
       display: flex;
       padding: 0 32px;
       flex-wrap: wrap;
+      min-height: 160px;
       li {
         width: 168px;
         height: 160px;
@@ -136,30 +128,31 @@ export default {
       }
     }
   }
+  // 推荐商品
   .ref-goods {
-   background-color: #fff;
-   margin-top: 20px;
-   position: relative;
-   .head {
-     .xtx-more {
-       position: absolute;
-       top: 20px;
-       right: 20px;
-     }
-     .tag {
-       text-align: center;
-       color: #999;
-       font-size: 20px;
-       position: relative;
-       top: -20px;
-     }
-   }
-   .body {
-     display: flex;
-     justify-content: flex-start;
-     flex-wrap: wrap;
-     padding: 0 65px 30px;
-   }
+    background-color: #fff;
+    margin-top: 20px;
+    position: relative;
+    .head {
+      .xtx-more {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+      .tag {
+        text-align: center;
+        color: #999;
+        font-size: 20px;
+        position: relative;
+        top: -20px;
+      }
+    }
+    .body {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      padding: 0 65px 30px;
+    }
   }
 }
 </style>
