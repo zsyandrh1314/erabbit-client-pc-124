@@ -6,8 +6,8 @@
        <!-- 面包屑 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
-        <XtxBreadItem :to="`/category/${goods.categories[0].id}`">{{goods.categories[0].name}}</XtxBreadItem>
-        <XtxBreadItem :to="`/category/sub/${goods.categories[1].id}`">{{goods.categories[1].name}}</XtxBreadItem>
+        <XtxBreadItem :to="`/category/${goods.categories[1].id}`">{{goods.categories[1].name}}</XtxBreadItem>
+        <XtxBreadItem :to="`/category/sub/${goods.categories[0].id}`">{{goods.categories[0].name}}</XtxBreadItem>
         <XtxBreadItem>{{goods.name}}</XtxBreadItem>
       </XtxBread>
 
@@ -22,13 +22,15 @@
         <div class="spec">
           <!-- 商品名组件 -->
           <GoodsName :goods="goods" />
-          <!-- 规格组件 -->
-          <GoodsSku :goods="goods"  />
+          <!-- sku规格组件 -->
+          <GoodsSku :goods="goods" @change="changeSku" />
+          <!-- 数量组件 -->
+          <XtxNumbox label="数量" v-model="num" :max="goods.inventory"/>
         </div>
       </div>
 
       <!-- 商品推荐 -->
-      <GoodsRelevant />
+      <GoodsRelevant :goodsId="goods.id" />
 
       <!-- 商品详情 -->
       <div class="goods-footer">
@@ -66,7 +68,17 @@ export default {
   setup () {
     // 获取商品详情，进行渲染
     const goods = useGoods()
-    return { goods }
+    // 监听是否能够收到值
+    const changeSku = (sku) => {
+      // 修改商品的现价原价库存信息
+      goods.value.price = sku.price
+      goods.value.oldPrice = sku.oldPrice
+      goods.value.inventory = sku.inventory
+      // console.log(sku);
+    }
+    // 选择的数量
+    const num = ref(1)
+    return { goods, changeSku, num }
   }
 }
 // 获取商品详情(定义到该函数里，setup进行渲染)
