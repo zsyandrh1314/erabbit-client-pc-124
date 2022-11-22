@@ -38,7 +38,9 @@
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs"></div>
+          <div class="goods-tabs">
+            <GoodsTabs :goods="goods" />
+          </div>
           <!-- 注意事项 -->
           <div class="goods-warn"></div>
         </div>
@@ -52,6 +54,7 @@
 </template>
 
 <script>
+import GoodsTabs from './components/goods-tabs'
 import GoodsRelevant from './components/goods-relevant'
 import GoodsImage from './components/goods-image'
 import GoodsSales from './components/goods-sales'
@@ -67,7 +70,8 @@ export default {
     GoodsImage,
     GoodsSales,
     GoodsName,
-    GoodsSku
+    GoodsSku,
+    GoodsTabs
   },
   setup () {
     // 获取商品详情，进行渲染
