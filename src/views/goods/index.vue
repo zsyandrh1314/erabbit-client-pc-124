@@ -2,7 +2,6 @@
 <!-- 商品详情 -->
   <div class="xtx-goods-page" v-if="goods">
     <div class="container">
-
        <!-- 面包屑 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
@@ -24,8 +23,11 @@
           <GoodsName :goods="goods" />
           <!-- sku规格组件 -->
           <GoodsSku :goods="goods" @change="changeSku" />
-          <!-- 数量组件 -->
+          <!-- 数量选择组件 -->
           <XtxNumbox label="数量" v-model="num" :max="goods.inventory"/>
+          <!-- 按钮组件 -->
+          <!--  @click="insertCart()" -->
+          <XtxButton type="primary" style="margin-top:20px">加入购物车</XtxButton>
         </div>
       </div>
 
@@ -41,7 +43,9 @@
           <div class="goods-warn"></div>
         </div>
         <!-- 24热榜+专题推荐 -->
-        <div class="goods-aside"></div>
+        <div class="goods-aside">
+          
+        </div>
       </div>
     </div>
   </div>
@@ -78,7 +82,7 @@ export default {
     }
     // 选择的数量
     const num = ref(1)
-    
+
     return { goods, changeSku, num }
   }
 }
