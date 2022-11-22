@@ -1,6 +1,7 @@
 <template>
 <!-- 按钮组件 -->
   <button class="xtx-button ellipsis" :class="[size,type]">
+    <!-- 插槽用来存放按钮的内容 -->
     <slot />
   </button>
 </template>

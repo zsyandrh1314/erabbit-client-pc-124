@@ -5,10 +5,18 @@
       <!-- fade 显示的图片加上 -->
       <!-- fade是控制显示那张图片的，需要一个默认索引数据，渲染第一张图和激活第一个点 -->
       <li class="carousel-item" v-for="(item,i) in sliders" :key="i" :class="{fade:index === i}">
-        <!-- 轮播图图片容器 -->
-        <RouterLink to="/">
+        <!-- 图片容器 -->
+        <RouterLink v-if="item.imgUrl" to="/">
           <img :src="item.imgUrl" alt="">
         </RouterLink>
+        <!-- 商品列表 item=[goods1,goods2,...]-->
+        <div v-else class="slider">
+          <RouterLink v-for="goods in item" :key="goods.id" :to="`/product/${goods.id}`">
+            <img :src="goods.picture" alt="">
+            <p class="name ellipsis">{{goods.name}}</p>
+            <p class="price">&yen;{{goods.price}}</p>
+          </RouterLink>
+        </div>
       </li>
     </ul>
       <!-- 上一张 -->
@@ -185,6 +193,31 @@ import { ref, watch } from 'vue'
   &:hover {
     .carousel-btn {
       opacity: 1;
+    }
+  }
+}
+// 轮播商品
+.slider {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 40px;
+  > a {
+    width: 240px;
+    text-align: center;
+    img {
+      padding: 20px;
+      width: 230px!important;
+      height: 230px!important;
+    }
+    .name {
+      font-size: 16px;
+      color: #666;
+      padding: 0 40px;
+    }
+    .price {
+      font-size: 16px;
+      color: @priceColor;
+      margin-top: 15px;
     }
   }
 }
