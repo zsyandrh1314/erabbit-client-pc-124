@@ -38,9 +38,9 @@
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-            <GoodsTabs :goods="goods" />
+          <GoodsTabs :goods="goods" />
           <!-- 注意事项 -->
-          <div class="goods-warn"></div>
+          <GoodsWarn />
         </div>
         <!-- 24热榜+专题推荐 -->
         <div class="goods-aside">
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import GoodsWarn from './components/goods-warn'
 import GoodsHot from './components/goods-hot'
 import GoodsTabs from './components/goods-tabs'
 import GoodsRelevant from './components/goods-relevant'
@@ -72,7 +73,8 @@ export default {
     GoodsName,
     GoodsSku,
     GoodsTabs,
-    GoodsHot
+    GoodsHot,
+    GoodsWarn
   },
   setup () {
     // 获取商品详情，进行渲染
@@ -147,9 +149,9 @@ const useGoods = () => {
 //   min-height: 600px;
 //   background: #fff;
 // }
-.goods-warn {
-  min-height: 600px;
-  background: #fff;
-  margin-top: 20px;
-}
+// .goods-warn {
+//   min-height: 600px;
+//   background: #fff;
+//   margin-top: 20px;
+// }
 </style>
