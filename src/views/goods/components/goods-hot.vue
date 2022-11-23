@@ -16,31 +16,28 @@
 import { computed, ref } from 'vue'
 import { findHotGoods } from '@/api/product'
 import GoodsItem from '../../category/components/goods-item'
+import { useRoute } from 'vue-router'
   export default {
     name: 'GoodsHot',
     components: { GoodsItem },
     props: {
+      // 热榜类型
       type: {
         type: Number,
         default: 1
-      },
-      goodsId: {
-        type: String
       }
     },
     setup(props) {
-      // 处理标题
-      const titleObj = {1:'24小时热销榜',2:'周热销榜',3:'总热销榜'}
+      // 类型数据字典 处理标题
+      const types = {1:'24小时热销榜',2:'周热销榜',3:'总热销榜'}
       const title = computed(() => {
-        return titleObj[props.type]
+        return types[props.type]
       })
-      // 商品列表
+      // 发请求获取数据 商品列表
+      const route = useRoute()
       const goodsList = ref([])
-      findHotGoods({ id: props.goodsId, type: props.type }).then(data => {
-      goodsList.value = data.result.map(item => {
-        item.tag = item.desc
-        return item
-      })
+      findHotGoods({ id: route.params.id, type: props.type }).then(data => {
+        goodsList.value = data.result
     })
       return { title, goodsList }
     }
@@ -59,7 +56,7 @@ import GoodsItem from '../../category/components/goods-item'
     margin-bottom: 10px;
     font-weight: normal;
   }
-  ::v-deep .goods-item {
+  :deep(.goods-item) {
     background: #fff;
     width: 100%;
     margin-bottom: 10px;

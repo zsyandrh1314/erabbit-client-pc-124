@@ -38,16 +38,14 @@
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs">
             <GoodsTabs :goods="goods" />
-          </div>
           <!-- 注意事项 -->
           <div class="goods-warn"></div>
         </div>
         <!-- 24热榜+专题推荐 -->
         <div class="goods-aside">
-          <GoodsHot :goodsId="goods.id" :type="1" />
-          <GoodsHot :goodsId="goods.id" :type="2" />
+          <GoodsHot />
+          <GoodsHot :type="2" />
         </div>
       </div>
     </div>
@@ -62,7 +60,7 @@ import GoodsImage from './components/goods-image'
 import GoodsSales from './components/goods-sales'
 import GoodsName from './components/goods-name'
 import GoodsSku from './components/goods-sku'
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, provide, ref, watch } from 'vue'
 import { findGoods } from '@/api/product'
 import { useRoute } from 'vue-router'
 export default {
@@ -82,11 +80,16 @@ export default {
     // 监听是否能够收到值
     const changeSku = (sku) => {
       // 修改商品的现价原价库存信息
-      goods.value.price = sku.price
-      goods.value.oldPrice = sku.oldPrice
-      goods.value.inventory = sku.inventory
-      // console.log(sku);
+      if (sku.skuId) {
+        goods.value.price = sku.price
+        goods.value.oldPrice = sku.oldPrice
+        goods.value.inventory = sku.inventory
+      }
     }
+
+    // 提供goods数据给后台组件使用，子孙组件注入goods数据，进行渲染展示
+    provide('goods', goods)
+
     // 选择的数量
     const num = ref(1)
 
@@ -140,10 +143,10 @@ const useGoods = () => {
     min-height: 100px;
   }
 }
-.goods-tabs {
-  min-height: 600px;
-  background: #fff;
-}
+// .goods-tabs {
+//   min-height: 600px;
+//   background: #fff;
+// }
 .goods-warn {
   min-height: 600px;
   background: #fff;

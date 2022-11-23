@@ -9,24 +9,31 @@
     <nav>
       <a 
       href="javascript:;" 
-      :class="{active:activeName === 'detail'}"
-      @click="clickTab('detail')"
+      :class="{ active: activeName === 'GoodsDetail' }"
+      @click="activeName = 'GoodsDetail'"
       >商品详情</a>
       <a
       href="javascript:;"
-      :class="{active:activeName === 'comment'}"
-      @click="clickTab('comment')"
-      >商品评价<span>(500+)</span></a>
+      :class="{active:activeName === 'GoodsComment'}"
+      @click="activeName = 'GoodsComment'"
+      >商品评价
+      <!-- 参考api文档 商品详情里面 -->
+      <span>({{goods.commentCount}})</span>
+      </a>
     </nav>
-    <!-- 切换内容的地方 -->
+    <!-- 切换内容的地方 其实是两个组件-->
+    <!-- 在vue中动态的切换组件其实可以使用动态组件的component组件 -->
+    <!-- is属性用来决定component动态组件渲染为哪个组件 -->
     <!-- 这个位置显示对应的组件 GoodsDetail 或者 GoodsComment -->
-    <component :is="'goods' + activeName" />
+    <!-- <GoodsDetial v-if="activeName === 'GoodsDetial'" />
+    <GoodsComment v-if="activeName === 'GoodsComment'" /> -->
+    <component :is="activeName" />
 
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import GoodsDetail from './goods-detail'
 import GoodsComment from './goods-comment'
   export default {
@@ -36,12 +43,11 @@ import GoodsComment from './goods-comment'
       GoodsComment
     },
     setup() {
-      // detail-->详情   comment-->评价
-      const activeName = ref('detail')
-      const clickTab = (name) => {
-        activeName.value = name
-      }
-      return { activeName, clickTab }
+      // activeName的值：GoodsDetial  GoodsComment
+      const activeName = ref('GoodsDetail')
+      // goods 详情数据
+      const goods = inject('goods')
+      return { activeName, goods }
     }
   }
 </script>
