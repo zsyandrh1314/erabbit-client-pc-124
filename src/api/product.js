@@ -35,3 +35,13 @@ export const findGoodsCommentInfo = (id) => {
   // axios 遇见 http https 开头的地址，不会加上基准地址
   return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`, 'get')
 }
+/**
+ * 查询商品评价列表
+ * @param {String} id - 商品ID
+ * @param {Object} params - 商品ID
+ * @returns
+ */
+export const findGoodsCommentList = (id, params) => {
+  // return request(`/goods/${id}/evaluate/page`, 'get')
+  return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate/page`, 'get', params)
+}

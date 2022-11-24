@@ -31,17 +31,42 @@
     </div>
     <div class="sort">
       <span>排序：</span>
-      <a href="javascript:;" class="active">默认</a>
-      <a href="javascript:;">最新</a>
-      <a href="javascript:;">最热</a>
+      <!-- 根据字段进行判断  
+           active激活  @click点击改变 -->
+      <a @click="changeSort(null)" :class="{active:reqParams.sortField === null}" href="javascript:;" class="active">默认</a>
+      <a @click="changeSort('createTime')" :class="{active:reqParams.sortField === 'createTime'}" href="javascript:;">最新</a>
+      <a @click="changeSort('praiseCount')" :class="{active:reqParams.sortField === 'praiseCount'}" href="javascript:;">最热</a>
     </div>
     <!-- 评价列表 -->
-    <div class="list"></div>
+    <div class="list" v-if="commentList">
+      <div class="item" v-for="item in commentList" :key="item.id">
+        <div class="user">
+          <img :src="item.member.avatar" alt="">
+          <span>{{formatNickname(item.member.nickname)}}</span>
+        </div>
+        <div class="body">
+          <!-- 星星 -->
+          <div class="score">
+            <!-- 实星 -->
+            <i v-for="i in item.score" :key="i+'s'" class="iconfont icon-wjx01"></i>
+            <!-- 空星 -->
+            <i v-for="i in 5-item.score" :key="i+'k'" class="iconfont icon-wjx02"></i>
+            <span class="attr">{{formatSpecs(item.orderInfo.specs)}}</span>
+          </div>
+          <div class="text">{{item.content}}</div>
+          <div class="time">
+            <span>{{item.createTime}}</span>
+            <!-- 点赞 -->
+            <span class="zan"><i class="iconfont icon-dianzan"></i>{{item.praiseCount}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import { inject, ref } from 'vue'
-import { findGoodsCommentInfo } from '@/api/product'
+import { inject, reactive, ref, watch } from 'vue'
+import { findGoodsCommentInfo, findGoodsCommentList } from '@/api/product'
 export default {
   name: 'GoodsComment',
   setup() {
@@ -49,25 +74,85 @@ export default {
     const commentInfo = ref(null)
     // 传入id 父组件provide的goods数据进行接收
     const goods = inject('goods')
+
     findGoodsCommentInfo(goods.value.id).then(data => {
       data.result.tags.unshift({
+        type: 'img',
         title: '有图', 
         tagCount: data.result.hasPictureCount
       })
       data.result.tags.unshift({
+        type: 'all',
         title:'全部评价', 
         tagCount: data.result.evaluateCount
       })
       // 设置数据之前，tags数组前需要追加  有图tag 和 全部评价tag
       commentInfo.value = data.result
     })
-    // 激活tag标签 索引默认激活全部所以为0
+
+    // 激活tag标签 (索引默认激活全部所以为0)
     const currentTagIndex = ref(0)
     // 得到索引
     const changeTag = (i) => {
       currentTagIndex.value = i
+      // 点击tag标签的时候修改筛选条件(值)
+      const tag = commentInfo.value.tags[i]
+      // console.log(tag);//看控制台获取成功否
+      // 情况1：全部评价
+      // 情况2：有图
+      // 情况3：正常tag
+      if (tag.type === 'all') {
+        reqParams.hasPicture = null
+        reqParams.tag = null
+      } else if (tag.type === 'img') {
+        reqParams.hasPicture = true
+        reqParams.tag = null
+      } else {
+        reqParams.hasPicture = null
+        reqParams.tag = tag.title
+      }
+      // 页码重置到1
+      reqParams.page = 1
     }
-    return { commentInfo, currentTagIndex, changeTag }
+
+    // 点击排序
+    const changeSort = (sortField) => {
+      reqParams.sortField = sortField
+      // 页码重置到1
+      reqParams.page = 1
+    }
+
+
+    // 准备筛选条件数据
+    const reqParams = reactive({
+      page: 1, // 页码
+      pageSize: 10, // 页尺寸
+      hasPicture: null, // 是否有图
+      tag: null, // 标签
+      sortField: null// 排序方式：排序字段，可选值范围[praiseCount,createTime]
+    })
+
+    // 初始化需要发请求，筛选条件发生改变发请求
+    const commentList = ref([])
+    watch(reqParams, () => {
+      findGoodsCommentList(goods.id, reqParams).then(data => {
+        commentList.value = data.result.items
+      })
+      // console.log('发请求');
+    }, {immediate: true})
+
+    // 定义转换数据的函数(对应vue2.0的过滤器)
+    // 属性
+    const formatSpecs = (specs) => {
+      return specs.reduce((p, c) => `${p} ${c.name}：${c.nameValue}`, '').trim()
+    }
+    // 匿名
+    const formatNickname = (nickname) => {
+      // substr 从0开始的第一个字符  substr(-1)最后一个字符
+      return nickname.substr(0, 1) + '****' + nickname.substr(-1)
+    }
+
+    return { commentInfo, currentTagIndex, changeTag, reqParams, commentList, changeSort, formatSpecs, formatNickname }
   }
 }
 </script>
@@ -148,6 +233,51 @@ export default {
       margin-left: 30px;
       &.active,&:hover {
         color: @xtxColor;
+      }
+    }
+  }
+  .list {
+    padding: 0 20px;
+    .item {
+      display: flex;
+      padding: 25px 10px;
+      border-bottom: 1px solid #f5f5f5;
+      .user {
+        width: 160px;
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          overflow: hidden;
+        }
+        span {
+          padding-left: 10px;
+          color: #666;
+        }
+      }
+      .body {
+        flex: 1;
+        .score {
+          line-height: 40px;
+          .iconfont {
+            color: #ff9240;
+            padding-right: 3px;
+          }
+          .attr {
+            padding-left: 10px;
+            color: #666;
+          }
+        }
+      }
+      .text {
+        color: #666;
+        line-height: 24px;
+      }
+      .time {
+        color: #999;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
       }
     }
   }
