@@ -13,6 +13,8 @@ const TopCategory = () => import('@/views/category/index')
 const SubCategory = () => import('@/views/category/sub')
 // 商品详情
 const Goods = () => import('@/views/goods/index')
+// 登录
+const Login = () => import('@/views/login/index')
 
 // 路由规则
 const routes = [
@@ -27,7 +29,9 @@ const routes = [
       { path: '/category/sub/:id', component: SubCategory },
       { path: '/product/:id', component: Goods}
     ] 
-  }
+  },
+  // 登录
+  { path: '/login',component: Login }
 ]
 // 创建路由实例
 // vue2.0 new VueRouter({}) 
