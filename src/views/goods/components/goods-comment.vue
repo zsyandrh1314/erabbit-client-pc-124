@@ -54,7 +54,7 @@
             <span class="attr">{{formatSpecs(item.orderInfo.specs)}}</span>
           </div>
           <div class="text">{{item.content}}</div>
-          <!-- 使用费图片预览组件 -->
+          <!-- 评论图片组件 -->
           <GoodsCommentImage v-if="item.pictures.length" :pictures="item.pictures" />
           <div class="time">
             <span>{{item.createTime}}</span>
@@ -64,6 +64,8 @@
         </div>
       </div>
     </div>
+    <!-- 分页组件 -->
+    <XtxPagination v-if="total" @current-change = "changePagerFn" :page-size="reqParams.pageSize" :current-page="reqParams.page" />
   </div>
 </template>
 <script>
@@ -78,7 +80,6 @@ export default {
     const commentInfo = ref(null)
     // 传入id 父组件provide的goods数据进行接收
     const goods = inject('goods')
-
     findGoodsCommentInfo(goods.value.id).then(data => {
       data.result.tags.unshift({
         type: 'img',
@@ -136,11 +137,14 @@ export default {
       sortField: null// 排序方式：排序字段，可选值范围[praiseCount,createTime]
     })
 
+    // 记录总条数
     // 初始化需要发请求，筛选条件发生改变发请求
     const commentList = ref([])
+    const total = ref(0)
     watch(reqParams, () => {
       findGoodsCommentList(goods.id, reqParams).then(data => {
         commentList.value = data.result.items
+        total.value = data.result.counts
       })
       // console.log('发请求');
     }, {immediate: true})
@@ -156,7 +160,12 @@ export default {
       return nickname.substr(0, 1) + '****' + nickname.substr(-1)
     }
 
-    return { commentInfo, currentTagIndex, changeTag, reqParams, commentList, changeSort, formatSpecs, formatNickname }
+    // 实现分页切换
+    const changePagerFn = (newPage) => {
+      reqParams.page = newPage
+    }
+
+    return { commentInfo, currentTagIndex, changeTag, reqParams, commentList, changeSort, formatSpecs, formatNickname, total, changePagerFn }
   }
 }
 </script>
@@ -166,7 +175,7 @@ export default {
     display: flex;
     padding: 30px 0;
     .data {
-      width:340px;
+      width: 340px;
       display: flex;
       padding: 20px;
       p {
@@ -176,7 +185,7 @@ export default {
           display: block;
           &:first-child {
             font-size: 32px;
-            color: @xtxColor;
+            color: @priceColor;
           }
           &:last-child {
             color: #999;
@@ -185,7 +194,7 @@ export default {
       }
     }
     .tags {
-      flex: 1; // flex为 1 平等分
+      flex: 1;
       display: flex;
       border-left: 1px solid #f5f5f5;
       .dt {
@@ -211,7 +220,7 @@ export default {
           line-height: 40px;
           &:hover {
             border-color: @xtxColor;
-            background: lighten(@xtxColor,50%);
+            background: lighten(@xtxColor, 50%);
             color: @xtxColor;
           }
           &.active {
@@ -235,12 +244,13 @@ export default {
     }
     > a {
       margin-left: 30px;
-      &.active,&:hover {
+      &.active,
+      &:hover {
         color: @xtxColor;
       }
     }
   }
-  .list {
+    .list {
     padding: 0 20px;
     .item {
       display: flex;
