@@ -142,7 +142,7 @@ export default {
     const commentList = ref([])
     const total = ref(0)
     watch(reqParams, () => {
-      findGoodsCommentList(goods.id, reqParams).then(data => {
+      findGoodsCommentList(goods.value.id, reqParams).then(data => {
         commentList.value = data.result.items
         total.value = data.result.counts
       })
