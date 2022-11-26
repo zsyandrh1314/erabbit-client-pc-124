@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="sort">
+    <div class="sort" v-if="commentTnfo">
       <span>排序：</span>
       <!-- 根据字段进行判断  
            active激活  @click点击改变 -->
