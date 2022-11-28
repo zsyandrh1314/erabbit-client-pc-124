@@ -62,6 +62,7 @@ import { onMounted, ref } from 'vue'
 </script>
 
 <style lang="less" scoped>
+// 动画效果
 .down {
   &-enter {
     &-from {

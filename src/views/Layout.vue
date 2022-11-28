@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import AppTopNav from '@/components/app-topnav'
+import AppTopNav from '@/components/app-navbar'
 import AppHeader from '@/components/app-header'
 import AppFooter from '@/components/app-footer'
 import AppHeaderSticky from '@/components/app-header-sticky'

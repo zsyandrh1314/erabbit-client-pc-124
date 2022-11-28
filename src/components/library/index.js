@@ -54,7 +54,7 @@ export default {
     defineDirective(app)
 
     // 定义一个原型函数
-    app.config.globalProperties.$message = Message
+    app.config.globalProperties.$message = Message //原型函数
   }
 }
 

@@ -4,8 +4,12 @@
       <ul>
         <!-- template的好处是可以看做事一个元素，但又不会解析成一个标签 -->
         <template v-if="profile.token">  
-          <li><a href="javascript:;"><i class="iconfont icon-user">{{profile.account}}</i>周杰伦</a></li>
-          <li><a href="javascript:;">退出登录</a></li>
+          <li>
+            <a href="javascript:;"><i class="iconfont icon-user"></i>
+              {{profile.account}}
+            </a>
+          </li>
+          <li @click="logout()"><a href="javascript:;">退出登录</a></li>
         </template>
         <template v-else>
         <li><RouterLink to="/login">请先登录</RouterLink></li>
@@ -25,6 +29,7 @@
 <script>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
   export default {
     name:'AppTopNav',
     setup () {
@@ -34,7 +39,20 @@ import { useStore } from 'vuex'
       const profile = computed(()=>{
           return store.state.user.profile
       })
-      return { profile }
+
+      // 退出登录
+      // 登录名：zhousg 密码：123456
+      // 1.清空本地存储信息和vuex的用户信息
+      // 2.跳转登录
+      const router = useRouter()
+      const logout = () => {
+        store.commit('user/setUser', {})
+        // 清空购物车
+        // store.commit('cart/setCart', [])
+        router.push('/login')
+    }
+    return { profile, logout }
+ 
     }
   }
 </script>
