@@ -15,6 +15,8 @@ const SubCategory = () => import('@/views/category/sub')
 const Goods = () => import('@/views/goods/index')
 // 登录
 const Login = () => import('@/views/login/index')
+// 回跳
+const LoginCallback = () => import('@/views/login/callback')
 
 // 路由规则
 const routes = [
@@ -31,7 +33,9 @@ const routes = [
     ] 
   },
   // 登录
-  { path: '/login',component: Login }
+  { path: '/login',component: Login },
+  // qq登录-回跳
+  { path: '/login/callback', component: LoginCallback }
 ]
 // 创建路由实例
 // vue2.0 new VueRouter({}) 
