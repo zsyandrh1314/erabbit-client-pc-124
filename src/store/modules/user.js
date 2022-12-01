@@ -13,7 +13,7 @@ export default {
         token: ''
       },
       // 登录后回跳路径
-      // redirectUrl: '/'
+      redirectUrl: '/'
     }
   },
   mutations: {

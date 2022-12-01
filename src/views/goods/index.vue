@@ -26,8 +26,7 @@
           <!-- 数量选择组件 -->
           <XtxNumbox label="数量" v-model="num" :max="goods.inventory"/>
           <!-- 按钮组件 -->
-          <!--  @click="insertCart()" -->
-          <XtxButton type="primary" style="margin-top:20px">加入购物车</XtxButton>
+          <XtxButton @click="insertCart()" type="primary" style="margin-top:20px">加入购物车</XtxButton>
         </div>
       </div>
 
@@ -64,6 +63,8 @@ import GoodsSku from './components/goods-sku'
 import { nextTick, provide, ref, watch } from 'vue'
 import { findGoods } from '@/api/product'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import Message from '@/components/library/Message'
 export default {
   name: 'XtxGoodsPage',
   components: { 
@@ -87,6 +88,8 @@ export default {
         goods.value.oldPrice = sku.oldPrice
         goods.value.inventory = sku.inventory
       }
+      // 记录选择后的sku，可能有数据，可能没有数据 {}空对象
+      currSku.value = sku
     }
 
     // 提供goods数据给后台组件使用，子孙组件注入goods数据，进行渲染展示
@@ -95,7 +98,37 @@ export default {
     // 选择的数量
     const num = ref(1)
 
-    return { goods, changeSku, num }
+    // 加入购物车
+    const store = useStore()
+    const currSku = ref(null)
+    // 判断规格是否完整 当规格不完整时，不能加入购物车
+    const insertCart = () => {
+      // 完整规格
+      if (currSku.value && currSku.value.skuId) {
+        // id skuId name attrsText picture price nowPrice selected stock count isEffective
+        const { skuId, specsText: attrsText, inventory: stock } = currSku.value
+        const { id, name, price, mainPictures } = goods.value
+        store.dispatch('cart/insertCart', {
+          skuId,
+          attrsText,
+          stock,
+          id,
+          name,
+          price,
+          nowPrice: price,
+          picture: mainPictures[0],
+          selected: true,
+          isEffective: true,
+          count: num.value
+        }).then(() => {
+        Message({type: 'success', text: '加入购物车成功'})
+        })
+      } else {
+        Message({text: '请选择完整规格'})
+      }
+    }
+
+    return { goods, changeSku, num, insertCart }
   }
 }
 // 获取商品详情(定义到该函数里，setup进行渲染)
