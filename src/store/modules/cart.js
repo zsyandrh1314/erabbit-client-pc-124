@@ -1,4 +1,5 @@
 // 购物车模块
+import { getNewCartGoods } from '@/api/cart'
 export default {
   namespaced: true,
   state: () => {
@@ -15,6 +16,7 @@ export default {
     // 1.先找下是否有相同商品
     // 2.如果有相同的商品，查询它的数量，累加到payload上，再保存最新位置上，原来商品需要删除
     // 3.如果没有相同商品，保存在最新位置即可
+    
     // 加入购物车
     insertCart (state, paylod) {
       const sameIndex = state.list.findIndex(goods => goods.skuId === paylod.skuId)
@@ -29,6 +31,18 @@ export default {
       }
       // 追加新的 unshift往最新位置上添加
       state.list.unshift(paylod)
+    },
+    // 修改购物车商品
+    updateCart (state, goods) {
+      // goods 商品信息：nowPrice stock isEffective
+      // goods 商品对象的字段不固定，对象中有哪些字段就改哪些字段
+      // goods 商品对象 必须有SKUID
+      const updateGoods = state.list.find(item => item.skuId === goods.skuId)
+      for (const key in goods) {
+        if (goods[key] !== undefined && goods[key] !== null && goods[key] !== '') {
+          updateGoods[key] = goods[key]
+        } 
+      }
     }
   },
   actions: {
@@ -43,6 +57,33 @@ export default {
           // 未登录
           ctx.commit('insertCart', payload)
           resolve()
+        }
+      })
+    },
+    // 获取商品列表
+    findCart (ctx) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // TODO 已登录
+        } else {
+          // 未登录
+          // 同时发送请求（与几个商品发几个请求）等所有请求成功，一并去修改本地数据
+          // promise.all([promise数组]).then((dataList)=> {}) 同时发送请求，所有请求成功，得到所有成功结果
+          // Promise提供的方法：
+          // Promise.resolve() Promise.reject() new Promise()
+          // Promise.race(promise数组).then((data)=> {})同时发请求，最快的请求成功，得到成功结果 
+          const promiseArr = ctx.state.list.map(goods => {
+            return getNewCartGoods(goods.skuId)
+          })
+          // dataList 成功结果的集合，数据顺序和promiseArr顺序一致，它又是根据state.list而来
+          Promise.all(promiseArr).then(dataList => {
+            // 更新本地购物车
+            dataList.forEach((data, i) => {
+              ctx.commit('updateCart', { skuId: ctx.state.list[i].skuId, ...data.result })
+            })
+            // 调用resolve代表操作成功
+            resolve()
+          })
         }
       })
     }
@@ -60,7 +101,8 @@ export default {
     },
     // 有效商品总余额
     validAmount (state,getters) { // 件数*价格 , *100再/100是防止有浮点数
-      return getters.validList.reduce((p,c) => p + c.nowPrice * 100 * c.count, 0) / 100
+      // return getters.validList.reduce((p,c) => p + c.nowPrice * 100 * c.count, 0) / 100
+      return getters.validList.reduce((p, c) => p + parseInt(c.nowPrice * 100) * c.count, 0) / 100
     }
   }
 }
