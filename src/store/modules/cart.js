@@ -46,5 +46,21 @@ export default {
         }
       })
     }
+  },
+  getters: {
+    // 有效商品列表
+    validList (state) {
+      // 有效商品：库存大于0 -> stock, 商品有效标识为true -> isEffective
+      return state.list.filter(goods => goods.stock > 0 && goods.isEffective)
+    },
+    // 有效商品总件数
+    validTotal(state, getters) {// p 是上一个回调的结果  从0开始累加
+      // reduce 累加
+      return getters.validList.reduce((p,c) => p + c.count, 0)
+    },
+    // 有效商品总余额
+    validAmount (state,getters) { // 件数*价格 , *100再/100是防止有浮点数
+      return getters.validList.reduce((p,c) => p + c.nowPrice * 100 * c.count, 0) / 100
+    }
   }
 }
