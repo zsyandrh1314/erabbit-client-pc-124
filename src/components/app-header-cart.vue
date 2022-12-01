@@ -1,12 +1,15 @@
 <template>
 <!-- 购物车组件 -->
   <div class="cart">
-    <a class="curr" href="javascript:;">
+    <!-- 点击进入购物车界面 -->
+    <RouterLink class="curr" to="/cart">
       <!-- 购物车图标 -->
-      <i class="iconfont icon-cart"></i><em>{{$store.getters['cart/validTotal']}}</em>
-    </a>
+      <i class="iconfont icon-cart"></i>
+      <em>{{$store.getters['cart/validTotal']}}</em>
+    </RouterLink>
     <!-- 购物车弹层 -->
-    <div class="layer">
+    <!-- 当商品数量>0时 且 当前路径的地址不应该等于购物车详情界面的时候才显示弹层 -->
+    <div class="layer" v-if="$store.getters['cart/validTotal']>0 && $router.path!=='/cart'">
       <div class="list">
         <div class="item" v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
           <RouterLink to="">
@@ -20,7 +23,8 @@
               <p class="count">x{{goods.count}}</p>
             </div>
           </RouterLink>
-          <i class="iconfont icon-close-new"></i>
+          <!-- 删除按钮 -->
+          <i @click="deleteCart(goods.skuId)" class="iconfont icon-close-new"></i>
         </div>
       </div>
       <div class="foot">
@@ -47,6 +51,14 @@ import Message from './library/Message'
       store.dispatch('cart/findCart').then(() => {
         Message({type:'success', text: '更新本地购物车成功' })
       })
+
+      // 删除函数
+      const deleteCart = (skuId) => {
+        // 调用action里面的方法
+        store.dispatch('cart/deleteCart', skuId)
+      }
+
+      return { deleteCart }
     }
   }
 </script>

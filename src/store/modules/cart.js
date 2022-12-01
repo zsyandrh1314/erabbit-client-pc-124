@@ -16,7 +16,7 @@ export default {
     // 1.先找下是否有相同商品
     // 2.如果有相同的商品，查询它的数量，累加到payload上，再保存最新位置上，原来商品需要删除
     // 3.如果没有相同商品，保存在最新位置即可
-    
+
     // 加入购物车
     insertCart (state, paylod) {
       const sameIndex = state.list.findIndex(goods => goods.skuId === paylod.skuId)
@@ -43,6 +43,11 @@ export default {
           updateGoods[key] = goods[key]
         } 
       }
+    },
+    // 删除购物车商品
+    deleteCart (state, skuId) {
+      const index = state.list.findIndex(item => item.skuId === skuId)
+      state.list.splice(index, 1)
     }
   },
   actions: {
@@ -84,6 +89,20 @@ export default {
             // 调用resolve代表操作成功
             resolve()
           })
+        }
+      })
+    },
+    // 删除购物车我
+    deleteCart (ctx, payload) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // TODO 已登录
+
+        } else {
+          // 未登录
+          // 单条删除 payload 现在 就是skuId
+          ctx.commit('deleteCart', payload)
+          resolve()
         }
       })
     }
