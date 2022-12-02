@@ -105,6 +105,19 @@ export default {
           resolve()
         }
       })
+    },
+    // 修改购物车（选中状态，数量）
+    updataCart (ctx, paylod) {
+      // paylod 需要：必需有skuId 可能：selected count
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // TODO 已登录
+        } else {
+          // 未登录
+          ctx.commit('updateCart', paylod)
+          resolve()
+        }
+      })
     }
   },
   getters: {

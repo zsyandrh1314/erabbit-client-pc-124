@@ -22,7 +22,8 @@
           <!-- 有效商品 -->
           <tbody>
             <tr v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
-              <td><XtxCheckbox :modelValue="goods.selected" /></td>
+              <!-- 单选 -->
+              <td><XtxCheckbox @change="($event)=>checkOne(goods.skuId, $event)" :modelValue="goods.selected" /></td>
               <td>
                 <div class="goods">
                   <!-- 跳转 -->
@@ -104,9 +105,18 @@
 </template>
 <script>
 import GoodRelevant from '@/views/goods/components/goods-relevant'
+import { useStore } from 'vuex'
 export default {
   name: 'XtxCartPage',
-  components: { GoodRelevant }
+  components: { GoodRelevant },
+  setup () {
+    const store = useStore()
+    // 单选
+    const checkOne = (skuId,selected) => { // 传入skuId和selected当前状态
+      store.dispatch('cart/updataCart', {skuId,selected})
+    }
+    return { checkOne }
+  }
 }
 </script>
 <style scoped lang="less">
