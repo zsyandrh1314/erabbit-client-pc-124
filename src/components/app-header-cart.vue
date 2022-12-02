@@ -12,7 +12,7 @@
     <div class="layer" v-if="$store.getters['cart/validTotal']>0 && $router.path!=='/cart'">
       <div class="list">
         <div class="item" v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
-          <RouterLink to="">
+          <RouterLink :to="`/product/${goods.id}`">
             <img :src="goods.picture" alt="">
             <div class="center">
               <p class="name ellipsis-2">{{goods.name}}</p>
@@ -34,7 +34,7 @@
           <!-- 总价格 -->
           <p>&yen;{{$store.getters['cart/validAmount']}}</p>
         </div>
-        <XtxButton type="plain">去购物车结算</XtxButton>
+        <XtxButton type="plain" @click="$router.push('/cart')">去购物车结算</XtxButton>
       </div>
     </div>
   </div>

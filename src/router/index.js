@@ -13,6 +13,8 @@ const TopCategory = () => import('@/views/category/index')
 const SubCategory = () => import('@/views/category/sub')
 // 商品详情
 const Goods = () => import('@/views/goods/index')
+// 购物车
+const Cart = () => import('@/views/cart/index')
 // 登录
 const Login = () => import('@/views/login/index')
 // 回跳
@@ -29,7 +31,8 @@ const routes = [
       { path: '/', component: Home },
       { path:'/category/:id', component: TopCategory },
       { path: '/category/sub/:id', component: SubCategory },
-      { path: '/product/:id', component: Goods}
+      { path: '/product/:id', component: Goods},
+      { path: '/cart', component: Cart}
     ] 
   },
   // 登录
