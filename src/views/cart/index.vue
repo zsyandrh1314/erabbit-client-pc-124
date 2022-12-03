@@ -22,6 +22,13 @@
           </thead>
           <!-- 有效商品 -->
           <tbody>
+            <!-- 无商品时 -->
+            <tr v-if="$store.getters['cart/validList'].length === 0">
+              <!-- 6就是下面6个td的 -->
+              <td colspan="6">
+                <CartNone />
+              </td>
+            </tr>
             <tr v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
               <!-- 单选 -->
               <td><XtxCheckbox @change="($event)=>checkOne(goods.skuId, $event)" :modelValue="goods.selected" /></td>
@@ -52,7 +59,8 @@
               </td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <!-- 删除 -->
+                <p><a @click="deleteCart(goods.skuId)" class="green" href="javascript:;">删除</a></p>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
@@ -60,7 +68,8 @@
           <!-- 无效商品 -->
           <tbody v-if="$store.getters['cart/invalidList'].length">
             <tr>
-              <td colspan="6"><h3 class="tit">失效商品</h3></td></tr>
+              <td colspan="6"><h3 class="tit">失效商品</h3></td>
+            </tr>
             <tr v-for="goods in $store.getters['cart/invalidList']" :key="goods.skuId">
               <td><XtxCheckbox style="color:#eee;" /></td>
               <td>
@@ -78,7 +87,8 @@
               <td class="tc">{{goods.count}}</td>
               <td class="tc"><p>&yen;{{Math.round(goods.nowPrice*100)*goods.count/100}}</p></td>
               <td class="tc">
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <!-- 删除 -->
+                <p><a @click="deleteCart(goods.skuId)" class="green" href="javascript:;">删除</a></p>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
@@ -90,6 +100,7 @@
         <div class="batch">
           <!-- 全选 -->
           <XtxCheckbox @change="checkAll" :modelValue="$store.getters['cart/isCheckAll']">全选</XtxCheckbox>
+          <!-- 删除 -->
           <a href="javascript:;">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
           <a href="javascript:;">清空失效商品</a>
@@ -106,13 +117,16 @@
   </div>
 </template>
 <script>
+import CartNone from './components/cart-none'
 import GoodRelevant from '@/views/goods/components/goods-relevant'
 import { useStore } from 'vuex'
+import Message from '@/components/library/Message'
 export default {
   name: 'XtxCartPage',
-  components: { GoodRelevant },
+  components: { GoodRelevant, CartNone },
   setup () {
     const store = useStore()
+
     // 单选
     const checkOne = (skuId,selected) => { // 传入skuId和selected当前状态
       store.dispatch('cart/updataCart', {skuId,selected})
@@ -121,7 +135,13 @@ export default {
     const checkAll = (selected) => {
       store.dispatch('cart/checkAllCart', selected)
     }
-    return { checkOne, checkAll }
+    // 删除
+    const deleteCart = (skuId) => {
+      store.dispatch('cart/deleteCart', skuId).then(() => {
+        Message({ type: 'success', text: '删除成功' })
+      })
+    }
+    return { checkOne, checkAll, deleteCart }
   }
 }
 </script>
