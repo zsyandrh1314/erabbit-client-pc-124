@@ -21,6 +21,8 @@ import defaultImg from '@/assets/images/200.png'
 
 import Message from './Message'
 
+import Confirm from './Confirm'
+
 // 导入library文件夹下的所有组件
 // 批量导入需要使用一个函数 require.context(dir,deep,matching)
 // require.context() 是webpack提供的一个自动导入的API
@@ -54,7 +56,9 @@ export default {
     defineDirective(app)
 
     // 定义一个原型函数
+    // 如果你想挂载全局的属性，能够通过组件实例调用的属性   this.$message
     app.config.globalProperties.$message = Message //原型函数
+    app.config.globalProperties.$confirm = Confirm
   }
 }
 

@@ -120,6 +120,7 @@
 import CartNone from './components/cart-none'
 import GoodRelevant from '@/views/goods/components/goods-relevant'
 import { useStore } from 'vuex'
+import Confirm from '@/components/library/Confirm'
 import Message from '@/components/library/Message'
 export default {
   name: 'XtxCartPage',
@@ -137,8 +138,16 @@ export default {
     }
     // 删除
     const deleteCart = (skuId) => {
-      store.dispatch('cart/deleteCart', skuId).then(() => {
-        Message({ type: 'success', text: '删除成功' })
+      // store.dispatch('cart/deleteCart', skuId).then(() => {
+        // Message({ type: 'success', text: '删除成功' })
+      // })
+      Confirm({ text: ' 亲，您是否确认删除商品' }).then(() => {
+        //  store.dispatch('cart/deleteCart', item.skuId)
+        store.dispatch('cart/deleteCart', skuId).then(() => {
+          Message({ type: 'success', text: '删除成功' })
+        })
+        }).catch(e => {
+        console.log('取消')
       })
     }
     return { checkOne, checkAll, deleteCart }

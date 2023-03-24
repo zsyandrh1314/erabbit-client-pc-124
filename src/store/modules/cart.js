@@ -92,7 +92,7 @@ export default {
         }
       })
     },
-    // 删除购物车我
+    // 删除购物车
     deleteCart (ctx, payload) {
       return new Promise((resolve, reject) => {
         if (ctx.rootState.user.profile.token) {
@@ -125,7 +125,7 @@ export default {
         if (ctx.rootState.user.profile.token) {
           // TODO 已登录
         } else {
-          // 为登录
+          // 未登录
           ctx.getters.validList.forEach(goods => {
             ctx.commit('updateCart', { skuId: goods.skuId, selected })
           })
