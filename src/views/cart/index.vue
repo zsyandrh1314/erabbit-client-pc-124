@@ -26,7 +26,7 @@
             <tr v-if="$store.getters['cart/validList'].length === 0">
               <!-- 6就是下面6个td的 -->
               <td colspan="6">
-                <CartNone :attrsText="goods.attrsText" />
+                <CartNone />
               </td>
             </tr>
             <tr v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
@@ -134,7 +134,7 @@ export default {
 
     // 单选
     const checkOne = (skuId,selected) => { // 传入skuId和selected当前状态
-      store.dispatch('cart/updataCart', {skuId,selected})
+      store.dispatch('cart/updateCart', {skuId,selected})
     }
     // 全选
     const checkAll = (selected) => {
@@ -160,7 +160,7 @@ export default {
     }
     // 修改数量
     const updateCount = (skuId, count) => {
-      store.dispatch('cart/updataCart', {skuId,count})
+      store.dispatch('cart/updateCart', {skuId,count})
     }
     // 修改规格
     const updateCartSku = (oldSkuId, newSku) => {
