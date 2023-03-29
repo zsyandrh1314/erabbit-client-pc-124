@@ -63,7 +63,7 @@ export default {
           const { id, account, avatar, mobile, nickname, token } = data.result
           store.commit('user/setUser', { id, account, avatar, mobile, nickname, token })
           store.dispatch('cart/mergeCart').then(() => {
-          // 2. 跳转到来源页或者首页
+            // 2. 跳转到来源页或者首页
             router.push(store.state.user.redirectUrl)
             // 3. 成功提示
             Message({ type: 'success', text: 'QQ登录成功' })

@@ -3,13 +3,13 @@
   <div class="home-new">
     <HomePanel title="新鲜好物" sub-title="新鲜出炉 品质靠谱">
       <template #right><XtxMore path="/" /></template>
-        <div ref="target" style="position:relative;height:406px">
+        <div ref="target" style="position:relative;height:406px;">
+          <!-- 面板内容 -->
           <Transition name="fade">
-            <!-- 面板内容 -->
             <ul v-if="goods.length" class="goods-list">
               <li v-for="item in goods" :key="item.id">
                 <!-- 新鲜好物跳转 -->
-                <RouterLink to="`/product/${item.id}`">
+                <RouterLink :to="`/product/${item.id}`">
                   <img :src="item.picture" alt="">
                   <p class="name ellipsis">{{item.name}}</p>
                   <!-- &yen;人民币书写格式 -->
